@@ -1,3 +1,5 @@
+import './global.css';
+
 type Props = {
   [key: string]: any;
   children?: ReactElement[];
@@ -8,7 +10,7 @@ type Props = {
 type ReactElement = {
   type: string;
   props: Props;
-  key: string | number | null;
+  key: string | null;
   ref: any;
 };
 
@@ -22,6 +24,11 @@ const React = {
   createRoot,
 }
 
+const states = [];
+let currentStateIndex = 0;
+let currentRoot = null;
+let currentComponent = null;
+
 function createElement(type: string | Function, props: Props, ...children: ReactElement[]): ReactElement {
   if (typeof type === 'function') {
     return type(props);
@@ -33,29 +40,45 @@ function createElement(type: string | Function, props: Props, ...children: React
       ...props,
       children
     },
-    key: props.key ?? null,
+    key: String(props.key) ?? null,
     ref: props.ref ?? null,
   };
 
-  console.log('createdElement: ', element);
   return element;
 }
 
 function createRoot(domNode: HTMLElement) {
-  console.log("creating root with element: ", domNode);
-  return {
-    render: (element: ReactElement) => render(element, domNode),
+  if (currentRoot) {
+    console.warn("create root should only be called once");
   }
+
+  const newRoot = {
+    render: (element: ReactElement) => render(element, domNode),
+    unmount: () => unmount(domNode)
+  }
+
+  currentRoot = newRoot;
+  //console.log("creating root with element: ", domNode);
+  return newRoot;
+}
+
+function unmount(domNode: HTMLElement) {
+  currentStateIndex = 0;
+  domNode.innerHTML = '';
 }
 
 function render(element: ReactElement, domNode: HTMLElement) {
-  console.log("rendering element: ", element);
+  if (typeof element.type === 'function') {
+    console.log('rendering function: ', element);
+  }
+  //console.log("rendering element: ", element);
 
-  if (typeof element === 'string') {
-    domNode.appendChild(document.createTextNode(element));
+  if (typeof element === 'string' || typeof element === 'number') {
+    domNode.appendChild(document.createTextNode(String(element)));
     return;
   }
 
+  // Array.map() will create an array within the children array
   if (Array.isArray(element)) {
     element.forEach(child => render(child, domNode));
     return;
@@ -77,24 +100,52 @@ function render(element: ReactElement, domNode: HTMLElement) {
   element.props.children.forEach(child => render(child, newDomNode));
 }
 
+function useState(initialValue) {
+  const index = currentStateIndex;
+  console.log(states)
+  states[index] = states[index] || initialValue;
+
+  const setState = newState => {
+    console.log(`setting state ${states[index]} to: ${newState}`);
+    states[index] = newState;
+    rerender();
+  }
+  currentStateIndex++;
+
+  return [states[index], setState];
+}
+
+function rerender() {
+  if (currentRoot) {
+    currentRoot.unmount();
+    currentRoot.render(<App />);
+  }
+}
+
 const App = () => {
+  const [counter, setCounter] = useState(0);
+
   return (
-    <div className='container'>
+    <section className='container'>
+      <button onclick={(e) => setCounter(counter + 1)} ></button>
+      <div>{counter}</div>
       {blogPostData.map((post, index) => (
-        <BlogPost {...post} key={index} />
+        <div className="article-container" key={index} >
+          <BlogPost {...post} />
+        </div>
       ))}
-    </div>
+    </section>
   )
 }
 
 const BlogPost = (props) => {
-  console.log("rendering props: ", props);
   return (
-    <div>
+    <article>
       <h3>{props.title}</h3>
-      <p><em>by {props.author} on {props.date}</em></p>
+      <h5>by {props.author}</h5>
+      <time dateTime={props.date}>{props.date}</time>
       <p>{props.content}</p>
-    </div>
+    </article>
   )
 }
 
