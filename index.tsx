@@ -1,53 +1,38 @@
+import { createElement } from './createElement';
 import './global.css';
+//import { createRoot, useState } from './render';
 
-type Props = {
-  [key: string]: any;
-  children?: ReactElement[];
-  key?: string | number | null;
-  ref?: any;
-};
-
-type ReactElement = {
-  type: string;
-  props: Props;
-  key: string | null;
-  ref: any;
-};
+export const React = {
+  createElement,
+  createRoot,
+  useState,
+}
 
 const ATTRIBUTE_NAME_MAP = {
   htmlFor: 'for',
 };
 
-
-const React = {
-  createElement,
-  createRoot,
-}
-
-const states = [];
-let currentStateIndex = 0;
 let currentRoot = null;
 let currentComponent = null;
+const states = [];
+let currentStateIndex = 0;
 
-function createElement(type: string | Function, props: Props, ...children: ReactElement[]): ReactElement {
-  if (typeof type === 'function') {
-    return type(props);
+export function useState(initialValue) {
+  const index = currentStateIndex;
+  console.log(states)
+  states[index] = states[index] || initialValue;
+
+  const setState = newState => {
+    console.log(`setting state ${states[index]} to: ${newState}`);
+    states[index] = newState;
+    rerender();
   }
+  currentStateIndex++;
 
-  const element = {
-    type,
-    props: {
-      ...props,
-      children
-    },
-    key: String(props.key) ?? null,
-    ref: props.ref ?? null,
-  };
-
-  return element;
+  return [states[index], setState];
 }
 
-function createRoot(domNode: HTMLElement) {
+export function createRoot(domNode: HTMLElement) {
   if (currentRoot) {
     console.warn("create root should only be called once");
   }
@@ -58,7 +43,7 @@ function createRoot(domNode: HTMLElement) {
   }
 
   currentRoot = newRoot;
-  //console.log("creating root with element: ", domNode);
+  console.log("creating root with element: ", domNode);
   return newRoot;
 }
 
@@ -100,21 +85,6 @@ function render(element: ReactElement, domNode: HTMLElement) {
   element.props.children.forEach(child => render(child, newDomNode));
 }
 
-function useState(initialValue) {
-  const index = currentStateIndex;
-  console.log(states)
-  states[index] = states[index] || initialValue;
-
-  const setState = newState => {
-    console.log(`setting state ${states[index]} to: ${newState}`);
-    states[index] = newState;
-    rerender();
-  }
-  currentStateIndex++;
-
-  return [states[index], setState];
-}
-
 function rerender() {
   if (currentRoot) {
     currentRoot.unmount();
@@ -122,7 +92,8 @@ function rerender() {
   }
 }
 
-const App = () => {
+
+export const App = () => {
   const [counter, setCounter] = useState(0);
 
   return (
@@ -170,6 +141,6 @@ const blogPostData = [
   }
 ]
 
-
-const root = createRoot(document.getElementById('root'));
+const rootId = document.getElementById('root');
+const root = createRoot(rootId);
 root.render(<App />);
