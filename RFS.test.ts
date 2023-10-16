@@ -1,5 +1,5 @@
 import { createElement } from './createElement';
-import { createRoot } from './index';
+import { createRoot } from './render';
 
 describe('rendering', () => {
 
@@ -11,7 +11,7 @@ describe('rendering', () => {
     const testRender = '<div className="container"></div>';
 
     // Now you can safely access the document object
-    //const root = createRoot(document.getElementById('root'));
+    const root = createRoot(document.getElementById('root'));
     //root.render(testRender);
 
     // Add your assertions here
