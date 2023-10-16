@@ -1,5 +1,4 @@
-import { createElement } from './createElement';
-import { createRoot } from './index';
+import { createElement } from '../src/createElement';
 
 describe('rendering', () => {
 
