@@ -1,4 +1,5 @@
 import { createElement } from "./createElement";
+import { resetHooks, setRerenderCallback, useState } from "./hooks";
 
 export const React = {
   createElement,
@@ -11,40 +12,6 @@ const ATTRIBUTE_NAME_MAP = {
 };
 
 let currentRoot = null;
-const hooks = [];
-let currentHookIndex = 0;
-
-export function useState(initialValue) {
-  const index = currentHookIndex;
-  hooks[index] = hooks[index] || initialValue;
-
-  const setState = newState => {
-    hooks[index] = newState;
-    rerender();
-  }
-  currentHookIndex++;
-
-  return [hooks[index], setState];
-}
-
-export function useEffect(body, dependencies) {
-  const index = currentHookIndex;
-
-  const hasChanged = !dependencies || !hooks[index] || dependencies.some((dependency, i) => {
-    return hooks[index].dependencies[i] !== dependency;
-  });
-
-  if (hasChanged) {
-    if (hooks[index]?.return != null) hooks[index].return();
-
-    hooks[index] = {
-      return: body(), // call the body function while assigning its return value
-      dependencies
-    }
-  }
-
-  currentHookIndex++;
-}
 
 export function createRoot(domNode: HTMLElement) {
   const newRoot = {
@@ -61,7 +28,7 @@ export function createRoot(domNode: HTMLElement) {
 }
 
 function unmount(domNode: HTMLElement) {
-  currentHookIndex = 0;
+  resetHooks();
   domNode.innerHTML = '';
 }
 
@@ -94,6 +61,8 @@ function render(element: ReactElement, domNode: HTMLElement) {
   // recurse on children
   element.props.children.forEach(child => render(child, newDomNode));
 }
+
+setRerenderCallback(rerender);
 
 function rerender() {
   if (currentRoot) {

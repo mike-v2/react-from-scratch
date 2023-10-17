@@ -1,4 +1,5 @@
-import { React, useEffect, useState } from './render';
+import { useState, useEffect } from './hooks';
+import { React } from './render';
 
 
 export function App() {
