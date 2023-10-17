@@ -1,8 +1,4 @@
 export function createElement(type: string | Function, props: { [key: string]: any }, ...children: ReactElement[] | string[]): ReactElement {
-  if (typeof type === 'function') {
-    return type(props);
-  }
-
   const element = {
     type,
     props: {

@@ -48,12 +48,13 @@ export function useEffect(body, dependencies) {
 }
 
 export function createRoot(domNode: HTMLElement) {
-  if (currentRoot) {
-    console.warn("create root should only be called once");
-  }
-
   const newRoot = {
-    render: (element: ReactElement) => render(element, domNode),
+    element: null,
+    render: (element: ReactElement) => {
+      console.log('newRoot element: ', element);
+      newRoot.element = element;
+      render(element, domNode);
+    },
     unmount: () => unmount(domNode)
   }
 
@@ -68,6 +69,11 @@ function unmount(domNode: HTMLElement) {
 
 function render(element: ReactElement, domNode: HTMLElement) {
   //console.log("rendering element: ", element);
+
+  if (typeof element.type === 'function') {
+    render(element.type(element.props), domNode);
+    return;
+  }
 
   if (element.type === 'Text') {
     domNode.appendChild(document.createTextNode(String(element.props.value)));
@@ -100,6 +106,11 @@ function render(element: ReactElement, domNode: HTMLElement) {
 function rerender() {
   if (currentRoot) {
     currentRoot.unmount();
-    currentRoot.render(<App />);
+    if (currentRoot.element) {
+      console.log("rerendering element: ", currentRoot.element);
+      //currentRoot.render(<NewRootElement {...currentRoot.elementProps} />);
+
+      currentRoot.render(currentRoot.element);
+    }
   }
 }

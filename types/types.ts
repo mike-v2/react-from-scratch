@@ -4,6 +4,6 @@ type Props = {
 };
 
 type ReactElement = {
-  type: string;
+  type: string | Function;
   props: Props;
 };
