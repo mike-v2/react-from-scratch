@@ -1,4 +1,5 @@
 import { createElement } from '../src/createElement';
+import { createRoot } from '../src/render';
 
 describe('rendering', () => {
 
@@ -7,15 +8,14 @@ describe('rendering', () => {
   });
 
   test('createRoot works as expected', () => {
-    const testRender = '<div className="container"></div>';
-
+    const element = createElement('div', { className: 'container' });
     // Now you can safely access the document object
-    //const root = createRoot(document.getElementById('root'));
-    //root.render(testRender);
+    const root = createRoot(document.getElementById('root'));
+    root.render(element);
 
     // Add your assertions here
     // For example, checking if a certain element exists after rendering:
-    //expect(document.querySelector('.container')).not.toBeNull();
+    expect(document.querySelector('.container')).not.toBeNull();
   });
 
   test('createElement creates an element', () => {

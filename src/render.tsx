@@ -1,4 +1,4 @@
-import { App } from ".";
+import { App } from "./App";
 import { createElement } from "./createElement";
 
 export const React = {
