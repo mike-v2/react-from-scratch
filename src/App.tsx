@@ -1,4 +1,30 @@
-import { React } from './render';
+import { React, useEffect, useState } from './render';
+
+
+export function App() {
+  const [counter, setCounter] = React.useState(0);
+
+  useEffect(() => {
+    console.log("called at start")
+  }, []);
+
+  useEffect(() => {
+    console.log('called on counter change');
+  }, [counter]);
+
+  return (
+    <section className='container'>
+      <button onClick={() => setCounter(counter + 1)} ></button>
+      <div>{counter}</div>
+      {blogPostData.map((post, index) => (
+        <div className="article-container" key={index} >
+          <BlogPost {...post} />
+        </div>
+      ))}
+    </section>
+  )
+}
+
 
 const blogPostData = [
   {
@@ -21,25 +47,13 @@ const blogPostData = [
   }
 ]
 
-export function App() {
-  const [counter, setCounter] = React.useState(0);
-
-  return (
-    <section className='container'>
-      <button onclick={(e) => setCounter(counter + 1)} ></button>
-      <div>{counter}</div>
-      {blogPostData.map((post, index) => (
-        <div className="article-container" key={index} >
-          <BlogPost {...post} />
-        </div>
-      ))}
-    </section>
-  )
-}
-
 const BlogPost = (props) => {
+  const [hasRead, setHasRead] = useState(false);
+
   return (
     <article>
+      <input type='checkbox' checked={hasRead} onChange={() => setHasRead(!hasRead)} name="hasRead" />
+      <label htmlFor='hasRead' >Has Read</label>
       <h3>{props.title}</h3>
       <h5>by {props.author}</h5>
       <time dateTime={props.date}>{props.date}</time>

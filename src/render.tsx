@@ -17,17 +17,34 @@ let currentHookIndex = 0;
 
 export function useState(initialValue) {
   const index = currentHookIndex;
-  console.log(hooks)
   hooks[index] = hooks[index] || initialValue;
 
   const setState = newState => {
-    console.log(`setting state ${hooks[index]} to: ${newState}`);
     hooks[index] = newState;
     rerender();
   }
   currentHookIndex++;
 
   return [hooks[index], setState];
+}
+
+export function useEffect(body, dependencies) {
+  const index = currentHookIndex;
+
+  const hasChanged = !dependencies || !hooks[index] || dependencies.some((dependency, i) => {
+    return hooks[index].dependencies[i] !== dependency;
+  });
+
+  if (hasChanged) {
+    if (hooks[index]?.return != null) hooks[index].return();
+
+    hooks[index] = {
+      return: body(), // call the body function while assigning its return value
+      dependencies
+    }
+  }
+
+  currentHookIndex++;
 }
 
 export function createRoot(domNode: HTMLElement) {
@@ -41,7 +58,6 @@ export function createRoot(domNode: HTMLElement) {
   }
 
   currentRoot = newRoot;
-  console.log("creating root with element: ", domNode);
   return newRoot;
 }
 
@@ -70,7 +86,8 @@ function render(element: ReactElement, domNode: HTMLElement) {
     if (prop === 'className') {
       newDomNode.classList.add(element.props[prop]);
     } else {
-      const domName = ATTRIBUTE_NAME_MAP[prop] || prop;
+      let domName = ATTRIBUTE_NAME_MAP[prop] || prop;
+      if (domName.startsWith('on')) domName = domName.toLowerCase();
       newDomNode[domName] = element.props[prop];
     }
   });
