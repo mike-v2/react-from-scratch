@@ -1,4 +1,3 @@
-import { App } from "./App";
 import { createElement } from "./createElement";
 
 export const React = {
@@ -51,7 +50,6 @@ export function createRoot(domNode: HTMLElement) {
   const newRoot = {
     element: null,
     render: (element: ReactElement) => {
-      console.log('newRoot element: ', element);
       newRoot.element = element;
       render(element, domNode);
     },
@@ -80,12 +78,6 @@ function render(element: ReactElement, domNode: HTMLElement) {
     return;
   }
 
-  // Array.map() will create an array within the children array
-  if (Array.isArray(element)) {
-    element.forEach(child => render(child, domNode));
-    return;
-  }
-
   const newDomNode = document.createElement(element.type);
   // copy props from element to new node
   Object.keys(element.props).filter(key => key !== 'children').forEach(prop => {
@@ -107,9 +99,6 @@ function rerender() {
   if (currentRoot) {
     currentRoot.unmount();
     if (currentRoot.element) {
-      console.log("rerendering element: ", currentRoot.element);
-      //currentRoot.render(<NewRootElement {...currentRoot.elementProps} />);
-
       currentRoot.render(currentRoot.element);
     }
   }

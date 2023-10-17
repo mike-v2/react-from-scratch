@@ -16,15 +16,12 @@ export function App() {
     <section className='container'>
       <button onClick={() => setCounter(counter + 1)} ></button>
       <div>{counter}</div>
-      {blogPostData.map((post, index) => (
-        <div className="article-container" key={index} >
-          <BlogPost {...post} />
-        </div>
+      {blogPostData.map(post => (
+        <BlogPost {...post} />
       ))}
     </section>
   )
 }
-
 
 const blogPostData = [
   {
