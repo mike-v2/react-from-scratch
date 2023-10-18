@@ -21,14 +21,14 @@ export function useState(initialValue) {
 
   const setState = newState => {
     hooks[index] = newState;
-    rerenderCallback();
+    setTimeout(() => rerenderCallback(), 0);
   }
   currentHookIndex++;
 
   return [hooks[index], setState];
 }
 
-export function useEffect(body, dependencies) {
+export function useEffect(body, dependencies = null) {
   const index = currentHookIndex;
 
   const hasChanged = !dependencies || !hooks[index] || dependencies.some((dependency, i) => {
@@ -36,6 +36,7 @@ export function useEffect(body, dependencies) {
   });
 
   if (hasChanged) {
+    // clean up previous useEffect
     if (hooks[index]?.return != null) hooks[index].return();
 
     hooks[index] = {

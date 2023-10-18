@@ -3,10 +3,13 @@ import { React } from './render';
 
 
 export function App() {
-  const [counter, setCounter] = React.useState(0);
+  const [counter, setCounter] = useState(0);
 
   useEffect(() => {
-    console.log("called at start")
+    console.log("called at start");
+    if (counter === 0) {
+      setCounter(counter + 1);
+    }
   }, []);
 
   useEffect(() => {
