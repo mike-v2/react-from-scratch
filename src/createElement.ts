@@ -1,6 +1,10 @@
 type Child = ReactElement | string | number;
 
-export function createElement(type: string | Function, props: { [key: string]: any }, ...children: Child[]): ReactElement {
+export function createElement(
+  type: string | Function,
+  props: { [key: string]: any },
+  ...children: Child[]
+): ReactElement {
   // using Array.map() in the JSX will create an array within the children array
   const flatChildren = children.flat();
 
@@ -8,11 +12,11 @@ export function createElement(type: string | Function, props: { [key: string]: a
     type,
     props: {
       ...props,
-      children: flatChildren.flatMap(child => (
-        typeof child === 'string' || typeof child === 'number' ?
-          createTextElement(String(child)) :
-          child
-      ))
+      children: flatChildren.flatMap((child) =>
+        typeof child === "string" || typeof child === "number"
+          ? createTextElement(String(child))
+          : child,
+      ),
     },
   };
 
@@ -24,7 +28,7 @@ function createTextElement(text: string): ReactElement {
     type: "Text",
     props: {
       value: text,
-      children: []
-    }
-  }
+      children: [],
+    },
+  };
 }
