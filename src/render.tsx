@@ -1,10 +1,11 @@
 import { createElement } from "./createElement";
-import { resetHooks, setRerenderCallback, useState } from "./hooks";
+import { resetHooks, setRerenderCallback, useState, useEffect } from "./hooks";
 
 export const React = {
   createElement,
   createRoot,
   useState,
+  useEffect,
 }
 
 const ATTRIBUTE_NAME_MAP = {

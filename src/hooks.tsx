@@ -1,4 +1,4 @@
-const hooks = [];
+let hooks = [];
 let currentHookIndex = 0;
 let rerenderCallback = null;
 
@@ -8,6 +8,11 @@ export function setRerenderCallback(callback) {
 
 export function resetHooks() {
   currentHookIndex = 0;
+}
+
+export function refreshHooks() {
+  currentHookIndex = 0;
+  hooks = [];
 }
 
 export function useState(initialValue) {

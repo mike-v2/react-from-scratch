@@ -1,3 +1,4 @@
+import { refreshHooks } from '../src/hooks';
 import { React } from '../src/render';
 
 describe('createElement', () => {
@@ -131,3 +132,64 @@ describe('render', () => {
     expect(renderedElement.onclick(null)).toBe(clickMsg);
   });
 });
+
+describe('useState', () => {
+  let rootNode = null;
+
+  beforeEach(() => {
+    refreshHooks();
+    document.body.innerHTML = '<div id="root"></div>';
+    rootNode = document.getElementById('root');
+  });
+
+  test('returns the initial value on the first call', () => {
+    function TestComponent() {
+      const [state] = React.useState('initial');
+      return <div>{state}</div>;
+    }
+
+    const root = React.createRoot(rootNode);
+    root.render(React.createElement(TestComponent, {}));
+
+    expect(rootNode.textContent).toBe('initial');
+  });
+
+  test('change state on button press', () => {
+    function Component() {
+      const [state, setState] = React.useState(0);
+
+      return (
+        <div>
+          <button id='btn-1' onClick={() => setState(state + 1)} />
+          {state}
+        </div>
+      )
+    }
+
+    console.log("body = ", document.body.innerHTML);
+    const root = React.createRoot(rootNode);
+    const element = React.createElement(Component, {});
+    root.render(element);
+    console.log("body = ", document.body.innerHTML);
+
+    const button = document.querySelector('#btn-1') as HTMLButtonElement;
+    const clickEvent = new MouseEvent('click');
+
+    button.dispatchEvent(clickEvent);
+
+    expect(rootNode.textContent).toBe("1");
+  });
+
+  test('handles multiple useState calls correctly', () => {
+    function Component() {
+      const [state1] = React.useState('first');
+      const [state2] = React.useState('second');
+      return <div>{`${state1}-${state2}`}</div>;
+    }
+
+    const root = React.createRoot(rootNode);
+    root.render(React.createElement(Component, {}));
+
+    expect(rootNode.textContent).toBe('first-second');
+  });
+})
