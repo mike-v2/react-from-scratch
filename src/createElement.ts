@@ -5,6 +5,7 @@ export function createElement(
   props: { [key: string]: any },
   ...children: Child[]
 ): ReactElement {
+
   // using Array.map() in the JSX will create an array within the children array
   const flatChildren = children.flat();
 
@@ -25,7 +26,7 @@ export function createElement(
 
 function createTextElement(text: string): ReactElement {
   return {
-    type: "Text",
+    type: "PLAIN_TEXT",
     props: {
       value: text,
       children: [],

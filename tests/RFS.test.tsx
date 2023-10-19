@@ -6,8 +6,10 @@ describe("createElement", () => {
     document.body.innerHTML = '<div id="root"></div>';
   });
 
-  test("creates an element", () => {
+  test("creates an object with type, props, and children", () => {
     const element = React.createElement("div", { id: "test" });
+
+    expect(typeof element).toBe('object');
     expect(element.type).toBe("div");
     expect(element.props.id).toBe("test");
     expect(element.props.children).not.toBeNull();
@@ -27,7 +29,7 @@ describe("createElement", () => {
     const element = React.createElement("div", {}, "text child");
 
     const expectedTextElement = {
-      type: "Text",
+      type: "PLAIN_TEXT",
       props: {
         value: "text child",
         children: [],
@@ -40,7 +42,7 @@ describe("createElement", () => {
     const element = React.createElement("div", {}, 42);
 
     const expectedTextElement = {
-      type: "Text",
+      type: "PLAIN_TEXT",
       props: {
         value: "42",
         children: [],
@@ -55,7 +57,7 @@ describe("render", () => {
     document.body.innerHTML = '<div id="root"></div>';
   });
 
-  test("createRoot returns an object with render and unmount", () => {
+  test("createRoot returns an object with render and unmount functions", () => {
     const root = React.createRoot(document.getElementById("root"));
 
     expect(root).toHaveProperty("render");

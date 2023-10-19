@@ -40,7 +40,7 @@ function render(element: ReactElement, domNode: HTMLElement) {
     return;
   }
 
-  if (element.type === "Text") {
+  if (element.type === "PLAIN_TEXT") {
     domNode.appendChild(document.createTextNode(String(element.props.value)));
     return;
   }

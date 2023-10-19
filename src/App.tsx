@@ -18,7 +18,6 @@ export function App() {
   return (
     <section className="container">
       <button onClick={() => setCounter(counter + 1)}></button>
-      <div>{counter}</div>
       {blogPostData.map((post) => (
         <BlogPost {...post} />
       ))}

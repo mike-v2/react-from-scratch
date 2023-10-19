@@ -10,43 +10,51 @@ export function resetHooks() {
   currentHookIndex = 0;
 }
 
+// used during testing to refresh the app
 export function refreshHooks() {
   currentHookIndex = 0;
   hooks = [];
 }
 
 export function useState(initialValue) {
+  // freeze index value for callback
   const index = currentHookIndex;
+  // initialize
   hooks[index] = hooks[index] || initialValue;
 
   const setState = (newState) => {
+    // always reference the same hook by freezing index
     hooks[index] = newState;
+    // rerender on state change
+    // use setTimeout so that the render process finishes before rerendering
     setTimeout(() => rerenderCallback(), 0);
   };
+  // prepare for the next hook call
   currentHookIndex++;
 
   return [hooks[index], setState];
 }
 
 export function useEffect(body, dependencies = null) {
-  const index = currentHookIndex;
-
-  const hasChanged =
+  // no dependecies runs every render
+  // empty dependency array runs once at start
+  // populated dependency array runs if the items change
+  const willRun =
     !dependencies ||
-    !hooks[index] ||
+    !hooks[currentHookIndex] ||
     dependencies.some((dependency, i) => {
-      return hooks[index].dependencies[i] !== dependency;
+      return hooks[currentHookIndex].dependencies[i] !== dependency;
     });
 
-  if (hasChanged) {
+  if (willRun) {
     // clean up previous useEffect
-    if (hooks[index]?.return != null) hooks[index].return();
+    if (hooks[currentHookIndex]?.return != null) hooks[currentHookIndex].return();
 
-    hooks[index] = {
+    hooks[currentHookIndex] = {
       return: body(), // call the body function while assigning its return value
       dependencies,
     };
   }
-
+  // prepare for the next hook call
   currentHookIndex++;
 }
