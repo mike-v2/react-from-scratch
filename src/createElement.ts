@@ -21,6 +21,8 @@ export function createElement(
     },
   };
 
+  //console.log('creating element: ', element);
+
   return element;
 }
 

@@ -22,6 +22,8 @@ export function useState(initialValue) {
   // initialize
   hooks[index] = hooks[index] || initialValue;
 
+  //console.log(`useState called with initialValue: ${initialValue} and currentValue: ${hooks[index]}`);
+
   const setState = (newState) => {
     // always reference the same hook by freezing index
     hooks[index] = newState;
@@ -45,6 +47,8 @@ export function useEffect(body, dependencies = null) {
     dependencies.some((dependency, i) => {
       return hooks[currentHookIndex].dependencies[i] !== dependency;
     });
+
+  console.log(`useEffect called with dependencies: ${dependencies}  useEffect should run? ${willRun}`)
 
   if (willRun) {
     // clean up previous useEffect

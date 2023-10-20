@@ -2,22 +2,24 @@ import { useState, useEffect } from "./hooks";
 import { React } from "./render";
 
 export function App() {
-  const [counter, setCounter] = useState(0);
+  const [theme, setTheme] = useState('light');
 
   useEffect(() => {
-    console.log("called at start");
-    if (counter === 0) {
-      setCounter(counter + 1);
-    }
+    console.log('called every render');
+  });
+
+  useEffect(() => {
+    console.log('called on start');
   }, []);
 
   useEffect(() => {
-    console.log("called on counter change");
-  }, [counter]);
+    console.log('called on theme change')
+    document.body.className = theme;
+  }, [theme]);
 
   return (
     <section className="container">
-      <button onClick={() => setCounter(counter + 1)}></button>
+      <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}></button>
       {blogPostData.map((post) => (
         <BlogPost {...post} />
       ))}
@@ -46,7 +48,7 @@ const blogPostData = [
   },
 ];
 
-const BlogPost = (props) => {
+function BlogPost(props) {
   const [hasRead, setHasRead] = useState(false);
 
   return (
@@ -62,6 +64,18 @@ const BlogPost = (props) => {
       <h5>by {props.author}</h5>
       <time dateTime={props.date}>{props.date}</time>
       <p>{props.content}</p>
+    </article>
+  );
+};
+
+export function SimpleBlogPost() {
+  return (
+    <article className='container'>
+      <header>
+        <h1>Recreating React</h1>
+        <h5>by Mike</h5>
+      </header>
+      <p>[content]</p>
     </article>
   );
 };

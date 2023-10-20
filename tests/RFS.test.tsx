@@ -67,7 +67,7 @@ describe("render", () => {
     expect(typeof root.unmount).toBe("function");
   });
 
-  test("render creates dom node of the correct type", () => {
+  test("creates dom node of the correct type", () => {
     const element = React.createElement("div", {});
     const rootNode = document.getElementById("root");
     const root = React.createRoot(rootNode);
@@ -76,7 +76,7 @@ describe("render", () => {
     expect(rootNode.firstChild.nodeName).toBe("DIV");
   });
 
-  test("render handles function components", () => {
+  test("handles function components", () => {
     const stringContent = "function name";
 
     const functionComponent = () => {
@@ -89,7 +89,7 @@ describe("render", () => {
     expect(document.body.textContent).toContain(stringContent);
   });
 
-  test("render transfers props from element to dom node", () => {
+  test("transfers props from element to dom node", () => {
     const src = "path/to/image.jpg";
     const alt = "Some Image";
     const element = React.createElement("img", {
@@ -105,13 +105,12 @@ describe("render", () => {
       "#imageID",
     ) as HTMLImageElement;
     expect(renderedElement).not.toBeNull();
-
     expect(renderedElement.src).toContain(src);
     expect(renderedElement.alt).toBe(alt);
   });
 
-  test("render converts props whose JSX name differs from the HTML name", () => {
-    // className -> class
+  test("converts props whose JSX name differs from the HTML name", () => {
+  // e.g. className -> class
     const element = React.createElement("div", { className: "container" });
     const root = React.createRoot(document.getElementById("root"));
     root.render(element);
@@ -119,8 +118,8 @@ describe("render", () => {
     expect(document.querySelector(".container")).not.toBeNull();
   });
 
-  test("render transfers event names in lower case", () => {
-    // onClick -> onclick
+  test("transfers event names in lower case", () => {
+  // e.g. onClick -> onclick
     const clickMsg = "clicked";
     const element = React.createElement("div", {
       id: "btnID",
@@ -138,6 +137,8 @@ describe("render", () => {
 describe("useState", () => {
   let rootNode = null;
 
+  // in the real React, the act() causes the state to update immediately
+  // our act() function will instead wait til the end of the call stack so that we know state has been set
   async function act(callback) {
     callback();
     await new Promise((resolve) => setTimeout(resolve, 0));

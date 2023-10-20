@@ -10,6 +10,7 @@ const ATTRIBUTE_NAME_MAP = {
   htmlFor: "for",
 };
 
+setRerenderCallback(rerender);
 let currentRoot = null;
 
 export function createRoot(domNode: HTMLElement) {
@@ -67,8 +68,6 @@ function render(element: ReactElement, domNode: HTMLElement) {
   // recurse on children
   element.props.children.forEach((child) => render(child, newDomNode));
 }
-
-setRerenderCallback(rerender);
 
 function rerender() {
   if (currentRoot) {
