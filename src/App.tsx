@@ -1,5 +1,8 @@
 import { useState, useEffect } from "./hooks";
 import { React } from "./render";
+// typescript requires extra configuration to import svg the ES6 way
+const lightIcon = require('./images/light-icon.svg');
+const darkIcon = require('./images/dark-icon.svg');
 
 export function App() {
   const [theme, setTheme] = useState('light');
@@ -19,7 +22,9 @@ export function App() {
 
   return (
     <section className="container">
-      <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}></button>
+      <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+        <img src={theme === 'light' ? darkIcon : lightIcon} width='30' height='30' />
+      </button>
       {blogPostData.map((post) => (
         <BlogPost {...post} />
       ))}
