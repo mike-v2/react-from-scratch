@@ -11,9 +11,9 @@ const ATTRIBUTE_NAME_MAP = {
 };
 
 setRerenderCallback(rerender);
-let currentRoot = null;
+let currentRoot: ReactRoot | null = null;
 
-export function createRoot(domNode: HTMLElement) {
+export function createRoot(domNode: HTMLElement): ReactRoot {
   const newRoot = {
     element: null,
     render: (element: ReactElement) => {
@@ -34,15 +34,13 @@ function unmount(domNode: HTMLElement) {
 }
 
 function render(element: ReactElement, domNode: HTMLElement) {
-  //console.log("rendering element: ", element);
-
   if (typeof element.type === "function") {
     render(element.type(element.props), domNode);
     return;
   }
 
   if (element.type === "PLAIN_TEXT") {
-    domNode.appendChild(document.createTextNode(String(element.props.value)));
+    domNode.appendChild(document.createTextNode(element.props.value));
     return;
   }
 
@@ -64,6 +62,8 @@ function render(element: ReactElement, domNode: HTMLElement) {
       }
     });
   domNode.appendChild(newDomNode);
+
+  console.log("rendered DOM node: ", newDomNode);
 
   // recurse on children
   element.props.children.forEach((child) => render(child, newDomNode));

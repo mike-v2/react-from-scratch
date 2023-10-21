@@ -48,7 +48,7 @@ export function useEffect(body, dependencies = null) {
       return hooks[currentHookIndex].dependencies[i] !== dependency;
     });
 
-  console.log(`useEffect called with dependencies: ${dependencies}  useEffect should run? ${willRun}`)
+  //console.log(`useEffect called with dependencies: ${dependencies}  useEffect should run? ${willRun}`)
 
   if (willRun) {
     // clean up previous useEffect

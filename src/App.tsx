@@ -5,15 +5,15 @@ export function App() {
   const [theme, setTheme] = useState('light');
 
   useEffect(() => {
-    console.log('called every render');
+    //console.log('called every render');
   });
 
   useEffect(() => {
-    console.log('called on start');
+    //console.log('called on start');
   }, []);
 
   useEffect(() => {
-    console.log('called on theme change')
+    //console.log('called on theme change')
     document.body.className = theme;
   }, [theme]);
 
