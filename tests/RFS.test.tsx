@@ -137,8 +137,7 @@ describe("render", () => {
 describe("useState", () => {
   let rootNode = null;
 
-  // in the real React, the act() causes the state to update immediately
-  // our act() function will instead wait til the end of the call stack so that we know state has been set
+  // make sure re-renders have finished before advancing
   async function act(callback) {
     callback();
     await new Promise((resolve) => setTimeout(resolve, 0));

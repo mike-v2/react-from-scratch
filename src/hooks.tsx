@@ -37,7 +37,7 @@ export function useState(initialValue) {
   return [hooks[index], setState];
 }
 
-export function useEffect(body, dependencies = null) {
+export function useEffect(setup, dependencies?) {
   // no dependecies runs every render
   // empty dependency array runs once at start
   // populated dependency array runs if the items change
@@ -55,7 +55,7 @@ export function useEffect(body, dependencies = null) {
     if (hooks[currentHookIndex]?.return != null) hooks[currentHookIndex].return();
 
     hooks[currentHookIndex] = {
-      return: body(), // call the body function while assigning its return value
+      return: setup(), // call the setup function while assigning its return value
       dependencies,
     };
   }

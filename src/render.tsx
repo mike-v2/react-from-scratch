@@ -63,7 +63,7 @@ function render(element: ReactElement, domNode: HTMLElement) {
     });
   domNode.appendChild(newDomNode);
 
-  console.log("rendered DOM node: ", newDomNode);
+  //console.log("rendered DOM node: ", newDomNode);
 
   // recurse on children
   element.props.children.forEach((child) => render(child, newDomNode));

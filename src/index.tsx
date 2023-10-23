@@ -4,4 +4,5 @@ import { App, SimpleBlogPost } from "./App";
 
 const rootId = document.getElementById("root");
 const root = React.createRoot(rootId);
+
 root.render(<App />);
