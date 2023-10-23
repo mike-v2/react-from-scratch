@@ -7,4 +7,4 @@ Ever wondered about the magic behind React’s curtain? What transforms that JSX
     3. useState — the cornerstone of state management in React
     4. useEffect — the lifecycle method that synchronizes your component with an external system
 
-Video demonstration: [https://www.youtube.com/watch?v=BU37lgD28lU&feature=youtu.be]YouTube video
+Video demonstration: [YouTube video](https://www.youtube.com/watch?v=BU37lgD28lU&feature=youtu.be)
